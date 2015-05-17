@@ -1,0 +1,190 @@
+#!/bin/sh
+
+func_help(){
+    echo \'build_list\' build the Algorithm test. 
+    echo Usage: $* [OPTIONS]...
+    echo Options:
+    echo "-d, --debug    Build with debug information."
+    echo "-h, --help     Shows this help message."
+    echo "--prefix DIR   Speicify the install DIR [default /usr/local]."
+    echo "--nomake       Do not make or install, configure only."
+    echo "--strip        Installs all files with symbols discarded."
+    echo "--uninstall    Removes files have been install to --prefix."
+    echo "--clean        Removes files created by the build system."
+    echo "--archive BASE Creates minimal archive file: BASE.tar.gz."
+}
+
+cur_dir=$PWD
+cd $(dirname $0)
+cd ..
+src_dir=$PWD
+cd $cur_dir
+
+opt_debug=false
+opt_prefix=/usr/local
+opt_nomake=false
+opt_strip=false
+opt_uninstall=false
+opt_clean=false
+opt_archive=false
+opt_archive_base=
+
+while test $# -gt 0;
+do
+    opt=$1
+    shift
+
+    case $opt in
+    -d|--debug)
+	opt_debug=:
+	;;
+    -h|--help)
+	func_help $0
+	exit 0
+	;;
+    --prefix)
+	opt_prefix=$1
+	shift
+	;;
+    --nomake)
+	opt_nomake=:
+	;;
+    --strip)
+	opt_strip=:
+	;;
+    --uninstall)
+	opt_uninstall=:
+	;;
+    --clean)
+	opt_clean=:
+	;;
+    --archive)
+	opt_archive=:
+	opt_archive_base=$1
+	shift
+	;;
+    *)
+	func_help $0
+	exit 0
+	;;
+    esac 
+done
+
+TEST="test"
+
+cmake_debug="-DCMAKE_BUILD_TYPE=RELEASE"
+if $opt_debug;
+then
+    cmake_debug="-DCMAKE_BUILD_TYPE=DEBUG"
+fi
+
+autoconf_install="install"
+if $opt_strip;
+then
+    autoconf_install="install-strip"
+fi
+
+cmake_install="install"
+if $opt_strip;
+then
+    cmake_install="install/strip"
+fi
+
+func_rmdir() {
+    if test -d $1;
+    then
+	if test -z "$(ls -A S1)"; 
+	then
+	    rmdir -v $1
+	fi
+    fi
+}
+
+if $opt_uninstall;
+then
+    echo [Uninstall $TEST]
+    if test -f $TEST/Makefile;
+    then
+	cd $TEST;
+	make uninstall;
+	cd $cur_dir
+    fi
+fi
+
+func_mkdir() {
+    if test -n $1;
+    then
+	if test ! -d $1;
+	then
+	    echo [Create directory $TEST]
+	    mkdir $1
+	    if test ! -d $1;
+	    then
+		echo Failed to create directory.
+		exit -1
+	    fi
+	fi
+    fi
+}
+
+echo $(basename $0) is building $TEST
+func_mkdir $TEST;
+cd $TEST
+
+MAKE=make
+MAKEFILE="CodeBlocks - Unix Makefiles"
+case "$(uname)" in
+    MINGW32*)
+	MAKE=mingw32-make
+	MAKEFILE="CodeBlocks - MinGW Makefiles"
+	;;
+esac
+
+# "sh -c" is required by msys shell
+if test ! -f Makefile \
+|| test Makefile -ot $TEST/CMakeLists.txt;
+then
+    echo [Configure $TEST]
+    sh -c "cmake -G\"$MAKEFILE\" -DCMAKE_INSTALL_PREFIX=$opt_prefix $cmake_debug $src_dir/$TEST"
+fi
+
+if $opt_nomake; 
+then
+    echo "Do not make or install."
+else
+    echo [Make algo-test];
+    $MAKE
+    echo [Install algo-test]
+    $MAKE $cmake_install
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

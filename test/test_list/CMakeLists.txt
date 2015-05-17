@@ -1,0 +1,32 @@
+
+INCLUDE_DIRECTORIES(
+    ${PROJECT_SOURCE_DIR}/../include
+)
+
+AUX_SOURCE_DIRECTORY(. SRC_LIST)
+ADD_EXECUTABLE(ltest ${SRC_LIST})
+
+IF(WIN32)
+    IF(MSVC)
+    ELSE(MSVC)
+    ENDIF(MSVC)
+ELSE(WIN32)
+    FIND_LIBRARY(liblist_core "list-core")
+    FIND_LIBRARY(liblist_src "list-src")
+ENDIF(WIN32)
+IF(NOT liblist_core MATCHES liblist_core-NOTFOUND)
+    TARGET_LINK_LIBRARIES(ltest ${liblist_core})
+ENDIF()
+IF(NOT liblist_src MATCHES liblist_src-NOTFOUND)
+    TARGET_LINK_LIBRARIES(ltest ${liblist_src})
+ENDIF()
+
+INSTALL(
+    TARGETS ltest 
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+)
+
+INSTALL(
+    FILES ${PROJECT_SOURCE_DIR}/test_list/temp.txt
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/test/ltest/
+)
