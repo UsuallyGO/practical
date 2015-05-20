@@ -1,7 +1,7 @@
 #!/bin/sh
 
 func_help(){
-    echo \'build_list\' build the Algorithm test. 
+    echo \'build_utility\' build the Pratical Algorithms\' Utility 
     echo Usage: $* [OPTIONS]...
     echo Options:
     echo "-d, --debug    Build with debug information."
@@ -70,7 +70,7 @@ do
     esac 
 done
 
-TEST="test"
+UTILITY="utility"
 
 cmake_debug="-DCMAKE_BUILD_TYPE=RELEASE"
 if $opt_debug;
@@ -102,10 +102,10 @@ func_rmdir() {
 
 if $opt_uninstall;
 then
-    echo [Uninstall $TEST]
-    if test -f $TEST/Makefile;
+    echo [Uninstall $UTILITY]
+    if test -f $UTILITY/Makefile;
     then
-	cd $TEST;
+	cd $UTILITY;
 	make uninstall;
 	cd $cur_dir
     fi
@@ -116,7 +116,7 @@ func_mkdir() {
     then
 	if test ! -d $1;
 	then
-	    echo [Create directory $TEST]
+	    echo [Create directory $UTILITY]
 	    mkdir $1
 	    if test ! -d $1;
 	    then
@@ -127,9 +127,9 @@ func_mkdir() {
     fi
 }
 
-echo $(basename $0) is building $TEST
-func_mkdir $TEST;
-cd $TEST
+echo $(basename $0) is building $UTILITY
+func_mkdir $UTILITY;
+cd $UTILITY
 
 MAKE=make
 MAKEFILE="CodeBlocks - Unix Makefiles"
@@ -142,19 +142,19 @@ esac
 
 # "sh -c" is required by msys shell
 if test ! -f Makefile \
-|| test Makefile -ot $TEST/CMakeLists.txt;
+|| test Makefile -ot $UTILITY/CMakeLists.txt;
 then
-    echo [Configure $TEST]
-    sh -c "cmake -G\"$MAKEFILE\" -DCMAKE_INSTALL_PREFIX=$opt_prefix $cmake_debug $src_dir/$TEST"
+    echo [Configure $UTILITY]
+    sh -c "cmake -G\"$MAKEFILE\" -DCMAKE_INSTALL_PREFIX=$opt_prefix $cmake_debug $src_dir/$UTILITY"
 fi
 
 if $opt_nomake; 
 then
     echo "Do not make or install."
 else
-    echo [Make algo-test];
+    echo [Make algo-utility];
     $MAKE
-    echo [Install algo-test]
+    echo [Install algo-utility]
     $MAKE $cmake_install
 fi
 

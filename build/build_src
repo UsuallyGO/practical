@@ -1,7 +1,7 @@
 #!/bin/sh
 
 func_help(){
-    echo \'build_algo\' build the Algorithm sources. 
+    echo \'build_src\' build the Algorithm Library.
     echo Usage: $* [OPTIONS]...
     echo Options:
     echo "-d, --debug    Build with debug information."
@@ -103,7 +103,7 @@ func_rmdir() {
 if $opt_uninstall;
 then
     echo [Uninstall $SRC]
-    if test -f $SRC/Makefile;
+    if test -f $CORE/Makefile;
     then
 	cd $SRC;
 	make uninstall;
@@ -150,7 +150,7 @@ else
     echo [Make algo-src];
     $MAKE
 
-    if test ! -f $opt_prefix/lib/$core_lib \
+    if test ! -f $opt_prefix/lib/$src_lib \
     || test $src_lib -nt $opt_prefix/lib/$src_lib;
     then
 	echo [Install algo-src]

@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#include "src/stacks.h"
+#include "stacks.h"
 
 void ClearStack( Stack *stack)
 {

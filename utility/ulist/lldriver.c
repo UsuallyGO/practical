@@ -4,7 +4,7 @@
 #include <string.h>
 
 #include "llgen.h"
-#include "src/llapp.h"
+#include "util/llapp.h"
 
 int main( int argc, char* argv[] )
 {

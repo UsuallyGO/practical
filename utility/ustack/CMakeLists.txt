@@ -4,7 +4,7 @@ INCLUDE_DIRECTORIES(
 )
 
 AUX_SOURCE_DIRECTORY(. SRC_STACK)
-ADD_EXECUTABLE(stest ${SRC_STACK})
+ADD_EXECUTABLE(ustack ${SRC_STACK})
 
 IF(WIN32)
     IF(MSVC)
@@ -15,13 +15,13 @@ ELSE(WIN32)
     FIND_LIBRARY(libstack_src "stack-src")
 ENDIF(WIN32)
 IF(NOT liblist_core MATCHES liblist_core-NOTFOUND)
-    TARGET_LINK_LIBRARIES(stest ${liblist_core})
+    TARGET_LINK_LIBRARIES(ustack ${liblist_core})
 ENDIF()
 IF(NOT libstack_src MATCHES libstack_src-NOTFOUND)
-    TARGET_LINK_LIBRARIES(stest ${libstack_src})
+    TARGET_LINK_LIBRARIES(ustack ${libstack_src})
 ENDIF()
 
 INSTALL(
-    TARGETS stest 
+    TARGETS ustack
     DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
 )
